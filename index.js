@@ -1,4 +1,5 @@
 const inquirer = require('inquirer');
+const axios = require('axios');
 const fs = require("fs");
 const util = require("util");
 
@@ -46,7 +47,16 @@ inquirer.prompt([
 
 ]).then(answer => {
     console.log(answer);
-    const data = getData(answer);
+
+    const queryUrl = `https://api.github.com/users/${username}`
+    const icon = "";
+    axios.get(queryUrl).then(function(result){
+      icon = result.data.avatar_url;
+
+    })
+
+    const data = getData(answer, icon);
+
     fs.writeFile("readme.md", data, function(error){
       if(error) {
         return;
@@ -59,31 +69,48 @@ inquirer.prompt([
 
 
   
-  function getData(answer) {
+  function getData(answer, icon) {
     return `# ${answer.projectName}
+(https://github.com/${answer.username}/${answer.projectName})
 
 ## Description  
 ${answer.description}
     
 ## Table of Contents
+
+  *[Installation](#installation)
+  *[Usage](#usage)
+  *[License](#license)
+  *[Contribution](#contribution)
+  *[Tests](#tests)
+  *[Questions](#questions)
     
 ## Installation
 ${answer.dependencies}
+
+To install necessary dependencies, run the following command:
+
+--
+npm i
+--
     
 ## Usage
 ${answer.usingRepo}
     
 ## License
-${license}
+${answer.license}
     
 ## Contributing
-${contribution}
+${answer.contribution}
     
 ## Tests
-${testing}
+${answer.testing}
     
 ## Questions
-If you have any questions about the repo, open an issue or contact ${name}`
+
+<img src="${icon}" alt="avatar" style="border-radius: 16px" width="30" />
+​
+If you have any questions about the repo, open an issue or contact ${answer.name}`
 };
 
   // function writeToFile(filename,data) {
