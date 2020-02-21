@@ -2,8 +2,8 @@ const inquirer = require('inquirer');
 const fs = require("fs");
 const util = require("util");
 
-inquirer.prompt(
-[{
+inquirer.prompt([
+  {
   type: "input",
   name: "username",
   message: "What is your GitHub username?"
@@ -42,21 +42,49 @@ inquirer.prompt(
   type: "input",
   name: "contribution",
   message: "What does the user need to know about contributing to the repo?"
-}]
-  ).then(answer => {
+}
+
+]).then(answer => {
     console.log(answer);
     const data = getData(answer);
-    fs.writeFile("readme.html", datafunction(error){
+    fs.writeFile("readme.md", data, function(error){
       if(error) {
         return;
       }
       console.log("Success");
     });
   });
+
+
+
+
   
-  function getData( {myName}) {
-    return
-  };
+  function getData(answer) {
+    return `# ${answer.projectName}
+
+## Description  
+${answer.description}
+    
+## Table of Contents
+    
+## Installation
+${answer.dependencies}
+    
+## Usage
+${answer.usingRepo}
+    
+## License
+${license}
+    
+## Contributing
+${contribution}
+    
+## Tests
+${testing}
+    
+## Questions
+If you have any questions about the repo, open an issue or contact ${name}`
+};
 
   // function writeToFile(filename,data) {
 
